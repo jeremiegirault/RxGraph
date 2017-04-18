@@ -149,7 +149,6 @@ enum Event: CustomStringConvertible {
     case nodesAdded(Set<Node>)
     case nodesRemoved(Set<Node>)
     case edgesAdded(Set<Edge>)
-    //case edgesRemoved(Set<Edge>)
     
     var description: String {
         switch self {
@@ -158,7 +157,6 @@ enum Event: CustomStringConvertible {
         case .nodesAdded(let nodes): return ".nodesAdded { \(nodes.map { "\($0)" }.joined(separator: ",")) }"
         case .nodesRemoved(let nodes): return ".nodesRemoved { \(nodes.map { "\($0)" }.joined(separator: ",")) }"
         case .edgesAdded(let edges): return ".edgesAdded { \(edges.map { "\($0)" }.joined(separator: ",")) }"
-        //case .edgesRemoved(let edges): return ".edgesRemoved { \(edges.map { "\($0)" }.joined(separator: ",")) }"
         }
     }
     
@@ -270,22 +268,17 @@ public final class ProcessingGraph {
     
     
     func clearAdjacencyInfo(for node: Node) {
-        //var removedEdges = Set<Edge>()
         
         inputs[node]?.value.forEach { input in // remove this node from output of each of its input
-            //removedEdges.insert(Edge(from: input, to: node))
             outputs[input]?.value.remove(node)
         }
         outputs[node]?.value.forEach { output in // remove this node from input of each of its output
-            //removedEdges.insert(Edge(from: node, to: output))
             inputs[output]?.value.remove(node)
         }
         
         // remove adjacency info for this node
         inputs.removeValue(forKey: node)
         outputs.removeValue(forKey: node)
-        
-        //history.append(.edgesRemoved(removedEdges))
     }
     
     //
